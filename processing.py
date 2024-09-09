@@ -12,8 +12,8 @@ from io import BytesIO
 import os
 
 # Ensure pytesseract uses the correct path to the Tesseract executable
-pytesseract.pytesseract.tesseract_cmd = r'C:/Users/NEERAJ B/AppData/Local/Programs/Tesseract-OCR/tesseract.exe'
-poppler_path = r'C:/Users/NEERAJ B/Desktop/Ai/Machine Learning/project/poppler-24.07.0/Library/bin'
+pytesseract.pytesseract.tesseract_cmd = 
+poppler_path = # add poppler executable path
 
 # Load Haar cascade for face detection
 face_cascade = cv2.CascadeClassifier(cv2.data.haarcascades + 'haarcascade_frontalface_default.xml')
