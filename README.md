@@ -1,35 +1,34 @@
-# step_logger.py
-import functools
-import inspect
-from datetime import datetime
+# html_reporter.py or end of test_lxs_declined.py
+from step_logger import STEP_LOGS
 import os
 
-def log_step(func):
-    @functools.wraps(func)
-    def wrapper(*args, **kwargs):
-        page = None
-        for arg in args:
-            if hasattr(arg, 'screenshot'):
-                page = arg
-                break
-        if page is None:
-            print(f"[WARNING] No Playwright page found in args for {func.__name__}")
-            return func(*args, **kwargs)
+def generate_custom_html_report(output_path="step_report.html"):
+    html = """
+    <html>
+    <head>
+        <title>Test Step Report</title>
+        <style>
+            body { font-family: Arial; padding: 20px; }
+            h2 { color: #444; }
+            .step { margin-bottom: 30px; }
+            img { border: 1px solid #ccc; max-width: 100%; }
+        </style>
+    </head>
+    <body>
+        <h1>LXS Test Step Report</h1>
+    """
 
-        step_name = func.__name__.replace("_", " ").capitalize()
-        print(f"[STEP] {step_name}")
+    for step in STEP_LOGS:
+        html += f"""
+        <div class="step">
+            <h2>{step['name']}</h2>
+            <img src="{step['screenshot']}" alt="{step['name']}">
+        </div>
+        """
 
-        result = func(*args, **kwargs)
+    html += "</body></html>"
 
-        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-        screenshot_dir = "screenshots"
-        os.makedirs(screenshot_dir, exist_ok=True)
-        screenshot_path = os.path.join(screenshot_dir, f"{func.__name__}_{timestamp}.png")
+    with open(output_path, "w") as f:
+        f.write(html)
 
-        page.screenshot(path=screenshot_path)
-        print(f"[SCREENSHOT] Saved: {screenshot_path}")
-
-        return result
-    return wrapper
-
-
+    print(f"[✅] Custom HTML report generated at: {output_path}")
